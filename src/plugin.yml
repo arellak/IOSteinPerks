@@ -1,0 +1,6 @@
+name: IOSteinPerks
+version: 0.1
+description: Perks for IOStein Server
+author: nimble0
+
+main: de.nimble.iostein.PerksPlugin
