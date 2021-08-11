@@ -1,5 +1,6 @@
 package de.nimble.iostein;
 
+import de.nimble.iostein.commands.NPCCommand;
 import de.nimble.iostein.commands.PerkCommand;
 import de.nimble.iostein.config.GeneralPerkConfig;
 import de.nimble.iostein.config.PerkConfig;
@@ -35,6 +36,7 @@ public class PerksPlugin extends JavaPlugin {
 
     public void loadCommands() {
         getCommand("perks").setExecutor(new PerkCommand());
+        getCommand("spawnNPC").setExecutor(new NPCCommand());
     }
 
     public void registerEvents(PluginManager pluginManager) {

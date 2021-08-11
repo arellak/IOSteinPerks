@@ -24,15 +24,14 @@ public class DamageListener implements Listener {
                 return;
             }
 
-            if(event.getCause() == EntityDamageEvent.DamageCause.FALL
-                    && player.getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.FALL) {
+
+            if(event.getCause() == EntityDamageEvent.DamageCause.FALL) {
                 for(Perk perk : perkPlayer.getPerks()) {
                     if(perk.getType() == PerkType.NO_FALL_DAMAGE) {
                         event.setCancelled(true);
                     }
                 }
-            } else if(event.getCause() == EntityDamageEvent.DamageCause.FIRE
-                    || player.getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.FIRE) {
+            } else if(event.getCause() == EntityDamageEvent.DamageCause.FIRE) {
                 for(Perk perk : perkPlayer.getPerks()) {
                     if(perk.getType() == PerkType.NO_FIRE_DAMAGE) {
                         event.setCancelled(true);

@@ -1,5 +1,7 @@
 package de.nimble.iostein.perks;
 
+import de.nimble.iostein.PerksPlugin;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +61,7 @@ public class PerkPlayerManager {
                 return perkPlayer.removePerk(perk);
             }
         }
-        return "";
+        return PerksPlugin.generalConfig.getPerkNotActiveMessage().replaceAll("%perk%", perk.getName());
     }
 
     public List<PerkPlayer> getPerkPlayers() {

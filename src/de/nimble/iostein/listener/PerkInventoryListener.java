@@ -15,6 +15,7 @@ public class PerkInventoryListener implements Listener {
             if(event.getCurrentItem().getType() == Material.BLACK_STAINED_GLASS_PANE) {
 
             }
+
         }
     }
 

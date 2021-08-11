@@ -50,7 +50,7 @@ public class PerkPlayer {
      */
     public String removePerk(Perk perk) {
         if(perkCount == 0) {
-            return "";
+            return PerksPlugin.generalConfig.getPerkNotActiveMessage().replaceAll("%perk%", perk.getName());
         }
 
         for(Perk pk : perks) {
@@ -80,7 +80,7 @@ public class PerkPlayer {
             }
         }
 
-        return "";
+        return PerksPlugin.generalConfig.getPerkNotActiveMessage().replaceAll("%perk%", perk.getName());
     }
 
 

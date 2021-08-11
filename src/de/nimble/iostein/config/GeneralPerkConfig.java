@@ -1,5 +1,6 @@
 package de.nimble.iostein.config;
 
+import de.nimble.iostein.perks.Perk;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -71,6 +72,14 @@ public class GeneralPerkConfig {
 
     public String getNoPerksUnlockedMessage() {
         return getString("messages.noPerksUnlocked").replaceAll("%prefix%", getPrefix());
+    }
+
+    public String getPerkNotActiveMessage() {
+        return getString("messages.perkNotActive");
+    }
+
+    public String getPerkVillagerSpawnedMessage() {
+        return getString("messages.perkVillagerSpawned").replaceAll("%prefix%", getPrefix());
     }
 
     // NPC stuff

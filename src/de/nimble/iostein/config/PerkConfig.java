@@ -75,7 +75,7 @@ public class PerkConfig {
     }
 
     public String getString(String name) {
-        return this.configuration.getString(name);
+        return ChatColor.translateAlternateColorCodes('&', this.configuration.getString(name));
     }
 
     public int getInt(String name) {
