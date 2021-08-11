@@ -11,7 +11,23 @@ public enum PerkType {
     NO_GRAVITY,
     UNDERWATER_BREATHING,
     SPEED,
-    NO_HUNGER
+    STRENGTH,
+    NO_HUNGER,
+    NONE
     ;
+
+    /**
+     *
+     * @param name A perk type read from a config for example
+     * @return either returns <b>NONE</b> or the Perk that equals the name in the param
+     */
+    public static PerkType getTypeByName(String name) {
+        for(PerkType type : PerkType.values()) {
+            if(type.name().equalsIgnoreCase(name)) {
+                return type;
+            }
+        }
+        return PerkType.NONE;
+    }
 
 }

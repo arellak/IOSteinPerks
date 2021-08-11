@@ -1,11 +1,14 @@
 package de.nimble.iostein.perks;
 
+import org.bukkit.entity.Player;
+
 /**
  * The Standard Perk class from which each PerkClass will inherit
  *
  */
 public abstract class Perk {
 
+    private int id;
     private String name;
     private String description;
     private int strength;
@@ -14,7 +17,18 @@ public abstract class Perk {
     /**
      * This method will be overwritten in each child class and in it will befined what the different Perks do
      */
-    public abstract void onAction();
+    public abstract void onAction(Player player);
+    
+    /*
+     * Just the getter and setters for the attributes
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return this.id;
+    }
 
     public void setName(String name) {
         this.name = name;
