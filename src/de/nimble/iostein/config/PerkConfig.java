@@ -2,6 +2,7 @@ package de.nimble.iostein.config;
 
 import de.nimble.iostein.perks.PerkType;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
@@ -27,19 +28,19 @@ public class PerkConfig {
     }
 
     public String getDisplayName(String name) {
-        String displayName = configuration.getString(name + ".displayName");
+        String displayName = getString(name + ".displayName");
         if(displayName == null || displayName.isEmpty()) {
             displayName = "&8Default name";
         }
-        return ChatColor.translateAlternateColorCodes('&', displayName);
+        return displayName;
     }
 
     public String getDescription(String name) {
-        String description = configuration.getString(name + ".description");
+        String description = getString(name + ".description");
         if(description == null || description.isEmpty()) {
             description = "&8Default description";
         }
-        return ChatColor.translateAlternateColorCodes('&', description);
+        return description;
     }
 
     /**
@@ -62,15 +63,19 @@ public class PerkConfig {
      * @return either <b>NONE</b> or the PerkType given in the config
      */
     public PerkType getType(String name) {
-        PerkType type = PerkType.getTypeByName(configuration.getString(name + ".type"));
+        PerkType type = PerkType.getTypeByName(getString(name + ".type"));
         if(type == null) {
             type = PerkType.NONE;
         }
         return type;
     }
 
+    public Material getItem(String name) {
+        return Material.getMaterial(getString(name + ".item"));
+    }
+
     public String getString(String name) {
-        return ChatColor.translateAlternateColorCodes('&', this.configuration.getString(name));
+        return this.configuration.getString(name);
     }
 
     public int getInt(String name) {

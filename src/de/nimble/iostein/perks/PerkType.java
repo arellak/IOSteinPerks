@@ -13,6 +13,7 @@ public enum PerkType {
     SPEED,
     STRENGTH,
     NO_HUNGER,
+    PREFIX,
     NONE
     ;
 

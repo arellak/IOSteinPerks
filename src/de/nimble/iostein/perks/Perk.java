@@ -1,5 +1,6 @@
 package de.nimble.iostein.perks;
 
+import de.nimble.iostein.perks.npc.PerkItem;
 import org.bukkit.entity.Player;
 
 /**
@@ -13,6 +14,7 @@ public abstract class Perk {
     private String description;
     private int strength;
     private PerkType type;
+    private PerkItem perkItem;
 
     /**
      * This method will be overwritten in each child class and in it will befined what the different Perks do
@@ -62,4 +64,11 @@ public abstract class Perk {
         return this.type;
     }
 
+    public void setPerkItem(PerkItem perkItem) {
+        this.perkItem = perkItem;
+    }
+
+    public PerkItem getPerkItem() {
+        return perkItem;
+    }
 }

@@ -19,33 +19,8 @@ public class PerkCommand implements CommandExecutor {
         }
 
         PerkType type = PerkType.getTypeByName(args[1]);
-        Perk perk = null;
 
-        switch (type) {
-            case STRENGTH:
-                perk = new StrengthPerk();
-                break;
-            case SPEED:
-                perk = new SpeedPerk();
-                break;
-            case NO_FALL_DAMAGE:
-                perk = new FallDamagePerk();
-                break;
-            case NO_FIRE_DAMAGE:
-                perk = new FireDamagePerk();
-                break;
-            case NO_GRAVITY:
-                perk = new GravityPerk();
-                break;
-            case UNDERWATER_BREATHING:
-                perk = new UnderwaterBreathingPerk();
-                break;
-            case NO_HUNGER:
-                perk = new HungerPerk();
-                break;
-            default:
-                break;
-        }
+        Perk perk = PerkManager.getInstance().getPerkByType(type);
 
         if(args[0].equalsIgnoreCase("add")) {
             String message = PerkPlayerManager.getInstance().addPerk(player.getDisplayName(), perk);

@@ -28,19 +28,18 @@ public class PerkPlayer {
      * @return Success/Error message
      */
     public String addPerk(Perk perk) {
-        if(perkCount+1 <= PerksPlugin.perkConfig.getInt("general.perkLimit")) {
+        if(perkCount+1 <= PerksPlugin.generalConfig.getPerkLimit()) {
             for(Perk pk : perks) {
                 if(pk.getName().equalsIgnoreCase(perk.getName())) {
-                    return PerksPlugin.perkConfig.getString("general.perkActiveMessage");
+                    return PerksPlugin.generalConfig.getPerkActiveMessage();
                 }
             }
 
             perks.add(perk);
             perkCount++;
-            return PerksPlugin.perkConfig.getString("general.perkAddedMessage")
-                    .replaceAll("%perkName%", perk.getName());
+            return PerksPlugin.generalConfig.getPerkAddedMessage().replaceAll("%perkName%", perk.getName());
         } else {
-            return PerksPlugin.perkConfig.getString("general.perkLimitMessage");
+            return PerksPlugin.generalConfig.getPerkLimitMessage();
         }
     }
 
@@ -77,8 +76,7 @@ public class PerkPlayer {
                         break;
                 }
 
-                return PerksPlugin.perkConfig.getString("general.perkRemovedMessage")
-                        .replaceAll("%perkName%", perk.getName());
+                return PerksPlugin.generalConfig.getPerkRemovedMessage().replaceAll("%perkName%", perk.getName());
             }
         }
 

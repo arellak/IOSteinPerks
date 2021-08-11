@@ -3,6 +3,7 @@ package de.nimble.iostein.perks.types;
 import de.nimble.iostein.PerksPlugin;
 import de.nimble.iostein.perks.Perk;
 import de.nimble.iostein.perks.PerkType;
+import de.nimble.iostein.perks.npc.PerkItem;
 import org.bukkit.entity.Player;
 
 public class GravityPerk extends Perk {
@@ -13,6 +14,7 @@ public class GravityPerk extends Perk {
         setDescription(PerksPlugin.perkConfig.getDescription("noGravity"));
         setStrength(PerksPlugin.perkConfig.getStrength("noGravity"));
         setType(PerkType.NO_GRAVITY);
+        setPerkItem(new PerkItem(getName(), PerksPlugin.perkConfig.getItem("noGravity")));
     }
 
     @Override

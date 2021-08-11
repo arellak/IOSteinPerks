@@ -3,6 +3,7 @@ package de.nimble.iostein.perks.types;
 import de.nimble.iostein.PerksPlugin;
 import de.nimble.iostein.perks.Perk;
 import de.nimble.iostein.perks.PerkType;
+import de.nimble.iostein.perks.npc.PerkItem;
 import org.bukkit.entity.Player;
 
 public class FallDamagePerk extends Perk {
@@ -13,6 +14,7 @@ public class FallDamagePerk extends Perk {
         setDescription(PerksPlugin.perkConfig.getDescription("noFallDamage"));
         setStrength(PerksPlugin.perkConfig.getStrength("noFallDamage"));
         setType(PerkType.NO_FALL_DAMAGE);
+        setPerkItem(new PerkItem(getName(), PerksPlugin.perkConfig.getItem("noFallDamage")));
     }
 
     @Override

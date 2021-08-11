@@ -1,5 +1,5 @@
 name: IOSteinPerks
-version: 0.1
+version: 0.3
 description: Perks for IOStein Server
 author: nimble0
 
@@ -9,3 +9,5 @@ commands:
   perks:
     description: Command for perks
     usage: /<name>
+    permission: perks.admin
+    permission-message: You don't have the right permission to do this
