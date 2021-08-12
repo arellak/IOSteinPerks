@@ -23,12 +23,12 @@ public class PerkCommand implements CommandExecutor {
         Perk perk = PerkManager.getInstance().getPerkByType(type);
 
         if(args[0].equalsIgnoreCase("add")) {
-            String message = PerkPlayerManager.getInstance().addPerk(player.getDisplayName(), perk);
+            String message = PerkPlayerManager.getInstance().addPerk(player, perk);
             player.sendMessage(message);
 
             PerkPlayerManager.getInstance().action();
         } else if(args[0].equalsIgnoreCase("remove")){
-            String message = PerkPlayerManager.getInstance().removePerk(player.getDisplayName(), perk);
+            String message = PerkPlayerManager.getInstance().removePerk(player, perk);
             player.sendMessage(message);
         }
         return true;

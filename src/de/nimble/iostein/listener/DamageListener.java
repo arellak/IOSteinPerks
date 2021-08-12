@@ -17,7 +17,7 @@ public class DamageListener implements Listener {
             Player player = (Player) event.getEntity();
 
             // get the perkplayer by the name of player that has caused this event
-            PerkPlayer perkPlayer = PerkPlayerManager.getInstance().getPerkPlayerByName(player.getDisplayName());
+            PerkPlayer perkPlayer = PerkPlayerManager.getInstance().getPerkPlayerByUUID(player.getUniqueId().toString());
 
             // if the given perkPlayer is null I don't want to continue
             if(perkPlayer == null) {

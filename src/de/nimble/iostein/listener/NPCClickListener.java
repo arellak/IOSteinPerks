@@ -18,7 +18,6 @@ public class NPCClickListener implements Listener {
         if(clicked.getUuid().toString().equals(PerksPlugin.generalConfig.getString("npc.uuid"))) {
             if(event.getClickAction() == NPCClickAction.INTERACT_AT) {
                 PerkInventory inventory = new PerkInventory();
-                inventory.loadContentFirstPage();
                 inventory.open(event.getPlayer());
             }
         }

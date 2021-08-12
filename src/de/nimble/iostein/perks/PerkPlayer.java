@@ -17,9 +17,9 @@ public class PerkPlayer {
     private int perkCount;
     private List<Perk> perks;
 
-    public PerkPlayer(String playerName) {
+    public PerkPlayer(Player player) {
         this.perks = new ArrayList<>();
-        this.player = Bukkit.getPlayer(playerName);
+        this.player = player;
         this.perkCount = 0;
     }
 
@@ -28,19 +28,15 @@ public class PerkPlayer {
      * @return Success/Error message
      */
     public String addPerk(Perk perk) {
-        if(perkCount+1 <= PerksPlugin.generalConfig.getPerkLimit()) {
-            for(Perk pk : perks) {
-                if(pk.getType() == perk.getType()) {
-                    return PerksPlugin.generalConfig.getPerkActiveMessage();
-                }
+        for(Perk pk : perks) {
+            if(pk.getType() == perk.getType()) {
+                return PerksPlugin.generalConfig.getPerkActiveMessage();
             }
-
-            perks.add(perk);
-            perkCount++;
-            return PerksPlugin.generalConfig.getPerkAddedMessage().replaceAll("%perkName%", perk.getName());
-        } else {
-            return PerksPlugin.generalConfig.getPerkLimitMessage();
         }
+
+        perks.add(perk);
+        perkCount++;
+        return PerksPlugin.generalConfig.getPerkAddedMessage().replaceAll("%perkName%", perk.getName());
     }
 
     /**

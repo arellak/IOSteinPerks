@@ -14,18 +14,11 @@ import org.bukkit.inventory.ItemStack;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-public class InventoryConfig {
-
-    private String fileName;
-    private File file;
-    private YamlConfiguration configuration;
+public class InventoryConfig extends BaseConfig {
 
     public InventoryConfig() {
-        this.fileName = "inventoryConfig";
-        this.file = new File("plugins/iosteinPerks/" + this.fileName + ".yml");
-        this.configuration = YamlConfiguration.loadConfiguration(this.file);
+        super("inventoryConfig");
     }
 
     public List<Pair<Integer, ItemStack>> getFirstPageItems() {
@@ -72,6 +65,34 @@ public class InventoryConfig {
         }
 
         return items;
+    }
+
+    public Material getActiveButtonMaterial() {
+        return Material.getMaterial(getString("inventory.content.firstPage.button.active.type"));
+    }
+
+    public String getActiveButtonName() {
+        return getString("inventory.content.firstPage.button.active.displayName");
+    }
+
+    public Material getInactiveButtonMaterial() {
+        return Material.getMaterial(getString("inventory.content.firstPage.button.inactive.type"));
+    }
+
+    public String getInactiveButtonName() {
+        return getString("inventory.content.firstPage.button.inactive.displayName");
+    }
+
+    public Material getNotUnlockedType() {
+        return Material.getMaterial(getString("inventory.content.secondPage.notUnlockedBarriers.type"));
+    }
+
+    public int getSize() {
+        return configuration.getInt("inventory.size");
+    }
+
+    public String getInventoryName() {
+        return getString("inventory.name");
     }
 
     public List<Pair<Integer, ItemStack>> getSecondPageItems() {
@@ -124,11 +145,6 @@ public class InventoryConfig {
         }
 
         return items;
-    }
-
-
-    public String getString(String name) {
-        return ChatColor.translateAlternateColorCodes('&', configuration.getString(name));
     }
 
 }

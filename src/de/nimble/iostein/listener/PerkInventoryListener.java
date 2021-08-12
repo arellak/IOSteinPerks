@@ -2,6 +2,7 @@ package de.nimble.iostein.listener;
 
 import de.nimble.iostein.PerksPlugin;
 import de.nimble.iostein.perks.Perk;
+import de.nimble.iostein.perks.PerkPlayer;
 import de.nimble.iostein.perks.PerkPlayerManager;
 import de.nimble.iostein.perks.npc.PerkInventory;
 import de.nimble.iostein.perks.types.PerkManager;
@@ -18,56 +19,62 @@ public class PerkInventoryListener implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (!(event.getView().getTitle().equalsIgnoreCase("Perks"))) return;
-        if(event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) return;
-
-        Player clicker = (Player) event.getWhoClicked();
-
-        PerkInventory inventory = new PerkInventory(clicker.getOpenInventory());
+        if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) return;
 
         event.setCancelled(true);
 
+        Player clicker = (Player) event.getWhoClicked();
         ItemStack currentItem = event.getCurrentItem();
-        Material currentItemType = currentItem.getType();
-        int slot = event.getSlot();
-        ItemStack perkItem = event.getInventory().getItem(slot - 9);
+        ItemStack perkItem = event.getInventory().getItem(event.getSlot() - 9);
+
         String clickedDisplayName = perkItem.getItemMeta().getDisplayName().replaceAll("§", "&");
 
+        PerkInventory inventory = new PerkInventory(clicker.getOpenInventory());
 
-        inventory.handlePageClick(currentItem);
+        inventory.handlePageClick(currentItem, clicker.getUniqueId().toString());
 
-        if(currentItemType == Material.GRAY_DYE) {
-            for (Perk perk : PerkManager.getInstance().getPerks()) {
-                String perkDisplayName = perk.getPerkItem().getDisplayName().replaceAll("§", "&");
+        Material currentItemType = currentItem.getType();
+        Material activeButtonMaterial = PerksPlugin.inventoryConfig.getActiveButtonMaterial();
+        Material inactiveButtonMaterial = PerksPlugin.inventoryConfig.getInactiveButtonMaterial();
+        Material notUnlockedType = PerksPlugin.inventoryConfig.getNotUnlockedType();
 
-                if (clickedDisplayName.equalsIgnoreCase(perkDisplayName)) {
-                    String message = PerkPlayerManager.getInstance().addPerk(clicker.getDisplayName(), perk);
-                    clicker.sendMessage(message);
-                    PerkPlayerManager.getInstance().action();
 
-                    currentItem.setType(Material.GREEN_DYE);
-                }
+        if (currentItemType == inactiveButtonMaterial) {
+            handle(true, clickedDisplayName, clicker);
+
+            int perkCount = PerkPlayerManager.getInstance().getPerkPlayerByUUID(clicker.getUniqueId().toString()).getPerkCount();
+
+            if(PerkPlayerManager.getInstance().perkLimitReached(perkCount)) {
+                return;
             }
-        } else if(event.getCurrentItem().getType() == Material.GREEN_DYE) {
-            for (Perk perk : PerkManager.getInstance().getPerks()) {
-                String perkDisplayName = perk.getPerkItem().getDisplayName().replaceAll("§", "&");
-
-                if (clickedDisplayName.equalsIgnoreCase(perkDisplayName)) {
-                    String message = PerkPlayerManager.getInstance().removePerk(clicker.getDisplayName(), perk);
-                    clicker.sendMessage(message);
-
-                    currentItem.setType(Material.GRAY_DYE);
-                }
-            }
-        } else if(event.getCurrentItem().getType() == Material.BARRIER) {
+            currentItem.setType(activeButtonMaterial);
+        } else if (currentItemType == activeButtonMaterial) {
+            handle(false, clickedDisplayName, clicker);
+            currentItem.setType(inactiveButtonMaterial);
+        } else if (currentItemType == notUnlockedType) {
             clicker.sendMessage(PerksPlugin.generalConfig.getPerkNotUnlockedMessage());
+        }
+    }
+
+    private void handle(boolean add, String displayName, Player clicker) {
+        for (Perk perk : PerkManager.getInstance().getPerks()) {
+            String perkDisplayName = perk.getPerkItem().getDisplayName().replaceAll("§", "&");
+            if (displayName.equalsIgnoreCase(perkDisplayName)) {
+                if (add) {
+                    String message = PerkPlayerManager.getInstance().addPerk(clicker, perk);
+                    clicker.sendMessage(message);
+                } else {
+                    String message = PerkPlayerManager.getInstance().removePerk(clicker, perk);
+                    clicker.sendMessage(message);
+                }
+            }
         }
     }
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
-        if(event.getView().getTitle().equalsIgnoreCase("Perks")) {
-            // save state in file
-        }
+        if (!(event.getView().getTitle().equalsIgnoreCase("Perks"))) return;
+
     }
 
 }

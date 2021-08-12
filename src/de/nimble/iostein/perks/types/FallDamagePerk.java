@@ -20,7 +20,6 @@ public class FallDamagePerk extends Perk {
     @Override
     public void onAction(Player player) {
         // nothing else to do here...
-        System.out.println("Removed falldamage from player...");
     }
 
 }

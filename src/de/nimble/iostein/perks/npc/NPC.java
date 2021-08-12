@@ -12,6 +12,7 @@ public interface NPC {
     int getId();
     void showTo(Player player);
     void hideFrom(Player player);
+    void hideFromEveryone();
     void delete();
     Location getLocation();
 

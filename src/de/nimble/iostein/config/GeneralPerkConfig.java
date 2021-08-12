@@ -1,25 +1,19 @@
 package de.nimble.iostein.config;
 
-import de.nimble.iostein.perks.Perk;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 
-public class GeneralPerkConfig {
-
-    private String configName;
-    private File file;
-    private YamlConfiguration configuration;
+public class GeneralPerkConfig extends BaseConfig {
 
     /**
      * Initalizes all the needed components for reading the Perks from a file
      * */
     public GeneralPerkConfig() {
-        this.configName = "config";
-        this.file = new File("plugins/iosteinPerks/config.yml");
-        this.configuration = YamlConfiguration.loadConfiguration(this.file);
+        super("config");
     }
 
     public int getPerkLimit() {
@@ -82,6 +76,8 @@ public class GeneralPerkConfig {
         return getString("messages.perkVillagerSpawned").replaceAll("%prefix%", getPrefix());
     }
 
+
+
     // NPC stuff
     public String getNPCName() {
         return getString("npc.name");
@@ -105,10 +101,6 @@ public class GeneralPerkConfig {
 
     public Material getNotUnlockedItem() {
         return Material.getMaterial(getString("npc.inventory.items.notUnlocked"));
-    }
-
-    public String getString(String name) {
-        return ChatColor.translateAlternateColorCodes('&', configuration.getString(name));
     }
 
     public int getInt(String name) {

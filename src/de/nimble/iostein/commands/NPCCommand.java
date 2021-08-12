@@ -3,7 +3,6 @@ package de.nimble.iostein.commands;
 import de.nimble.iostein.PerksPlugin;
 import de.nimble.iostein.perks.npc.NPC;
 import de.nimble.iostein.perks.npc.NPCOptions;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,16 +17,8 @@ public class NPCCommand implements CommandExecutor {
         }
         Player player = (Player) commandSender;
 
-        NPCOptions npcOptions = new NPCOptions();
-        npcOptions.setUuid(PerksPlugin.generalConfig.getString("npc.uuid"));
-        npcOptions.setName(PerksPlugin.generalConfig.getString("npc.name"));
-        npcOptions.setLocation(player.getLocation());
-
-        NPC npc = PerksPlugin.npcManager.newNPC(npcOptions);
-
-        for(Player p : Bukkit.getOnlinePlayers()) {
-            npc.showTo(p);
-        }
+        NPC npc = PerksPlugin.npcManager.spawnNPC(player.getLocation());
+        PerksPlugin.npcLocationConfig.saveLocation(npc.getLocation());
 
         player.sendMessage(PerksPlugin.generalConfig.getPerkVillagerSpawnedMessage());
 

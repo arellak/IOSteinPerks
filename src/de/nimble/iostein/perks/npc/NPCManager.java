@@ -7,8 +7,10 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import de.nimble.iostein.PerksPlugin;
 import de.nimble.iostein.perks.npc.events.NPCInteractionEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -53,6 +55,27 @@ public class NPCManager {
                     NPCInteractionEvent event = new NPCInteractionEvent(npc, player, action);
                     Bukkit.getPluginManager().callEvent(event);
                 }, 2));
+    }
+
+    public void spawnAllNPCs() {
+        for(Location loc : PerksPlugin.npcLocationConfig.getLocations()) {
+            spawnNPC(loc);
+        }
+    }
+
+    public NPC spawnNPC(Location loc) {
+        NPCOptions npcOptions = new NPCOptions();
+        npcOptions.setUuid(PerksPlugin.generalConfig.getString("npc.uuid"));
+        npcOptions.setName(PerksPlugin.generalConfig.getString("npc.name"));
+        npcOptions.setLocation(loc);
+
+        NPC npc = newNPC(npcOptions);
+
+        for(Player p : Bukkit.getOnlinePlayers()) {
+            npc.showTo(p);
+        }
+
+        return npc;
     }
 
     public NPC newNPC(NPCOptions options) {

@@ -22,7 +22,6 @@ public class SpeedPerk extends Perk {
     @Override
     public void onAction(Player player) {
         player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, getStrength()));
-        System.out.println("Added potion effect to player...");
     }
 
 }

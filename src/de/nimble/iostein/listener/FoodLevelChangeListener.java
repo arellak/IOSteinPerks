@@ -18,7 +18,7 @@ public class FoodLevelChangeListener implements Listener {
         }
 
         Player player = (Player) event.getEntity();
-        PerkPlayer perkPlayer = PerkPlayerManager.getInstance().getPerkPlayerByName(player.getDisplayName());
+        PerkPlayer perkPlayer = PerkPlayerManager.getInstance().getPerkPlayerByUUID(player.getUniqueId().toString());
         if(perkPlayer == null) {
             return;
         }

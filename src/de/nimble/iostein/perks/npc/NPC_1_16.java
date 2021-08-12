@@ -149,6 +149,8 @@ public class NPC_1_16 implements NPC{
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
         onlineViewers.forEach(this::hideFrom);
+
+        PerksPlugin.npcLocationConfig.deleteLocation(getLocation());
     }
 
     public void sendHeadRotationPacket(Player player) {
@@ -204,6 +206,17 @@ public class NPC_1_16 implements NPC{
                 entityPlayer.yaw,
                 entityPlayer.pitch
         );
+    }
+
+    @Override
+    public void hideFromEveryone() {
+        for(Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            if (!viewers.contains(onlinePlayer.getUniqueId())) return;
+            viewers.remove(onlinePlayer.getUniqueId());
+
+            PacketPlayOutEntityDestroy packet = new PacketPlayOutEntityDestroy(entityPlayer.getId());
+            sendPacket(onlinePlayer, packet);
+        }
     }
 
     private void sendPacket(Player player, Object packet) {

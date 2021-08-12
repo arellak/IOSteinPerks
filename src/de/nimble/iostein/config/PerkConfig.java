@@ -1,26 +1,15 @@
 package de.nimble.iostein.config;
 
 import de.nimble.iostein.perks.PerkType;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.File;
-
-public class PerkConfig {
-
-    private String configName;
-    private File file;
-    private YamlConfiguration configuration;
+public class PerkConfig extends BaseConfig {
 
     /**
      * Initalizes all the needed components for reading the Perks from a file
-     * @param configName the name of the config file
      */
-    public PerkConfig(String configName) {
-        this.configName = configName;
-        this.file = new File("plugins/iosteinPerks/" + configName + ".yml");
-        this.configuration = YamlConfiguration.loadConfiguration(this.file);
+    public PerkConfig() {
+        super("perks");
     }
 
     public int getId(String name) {
@@ -55,6 +44,7 @@ public class PerkConfig {
         if(perkType == PerkType.SPEED || perkType == PerkType.STRENGTH) {
             strength = configuration.getInt(name + ".strength");
         }
+
         return strength;
     }
 
@@ -67,31 +57,12 @@ public class PerkConfig {
         if(type == null) {
             type = PerkType.NONE;
         }
+
         return type;
     }
 
     public Material getItem(String name) {
         return Material.getMaterial(getString(name + ".item"));
     }
-
-    public String getString(String name) {
-        return ChatColor.translateAlternateColorCodes('&', this.configuration.getString(name));
-    }
-
-    public int getInt(String name) {
-        return this.configuration.getInt(name);
-    }
-
-    /*
-     * Only getters because we don't want other people to modidfy and eventually break anything in this class
-     */
-    public String getConfigName() {
-        return this.configName;
-    }
-
-    public YamlConfiguration getConfiguration() {
-        return this.configuration;
-    }
-
 
 }
