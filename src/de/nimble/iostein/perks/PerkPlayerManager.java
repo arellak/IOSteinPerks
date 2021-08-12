@@ -1,6 +1,7 @@
 package de.nimble.iostein.perks;
 
 import de.nimble.iostein.PerksPlugin;
+import de.nimble.iostein.config.GeneralPerkConfig;
 
 import java.util.ArrayList;
 import java.util.List;

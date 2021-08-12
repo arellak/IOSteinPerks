@@ -30,7 +30,7 @@ public class PerkPlayer {
     public String addPerk(Perk perk) {
         if(perkCount+1 <= PerksPlugin.generalConfig.getPerkLimit()) {
             for(Perk pk : perks) {
-                if(pk.getName().equalsIgnoreCase(perk.getName())) {
+                if(pk.getType() == perk.getType()) {
                     return PerksPlugin.generalConfig.getPerkActiveMessage();
                 }
             }

@@ -1,14 +1,27 @@
 package de.nimble.iostein.listener;
 
+import de.nimble.iostein.PerksPlugin;
+import de.nimble.iostein.perks.npc.NPC;
+import de.nimble.iostein.perks.npc.NPCClickAction;
+import de.nimble.iostein.perks.npc.PerkInventory;
+import de.nimble.iostein.perks.npc.events.NPCInteractionEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+
 
 public class NPCClickListener implements Listener {
 
     @EventHandler
-    public void onNPCClick(PlayerInteractAtEntityEvent event) {
+    public void onPlayerInteractEntity(NPCInteractionEvent event) {
+        NPC clicked = event.getClicked();
 
+        if(clicked.getUuid().toString().equals(PerksPlugin.generalConfig.getString("npc.uuid"))) {
+            if(event.getClickAction() == NPCClickAction.INTERACT_AT) {
+                PerkInventory inventory = new PerkInventory();
+                inventory.loadContentFirstPage();
+                inventory.open(event.getPlayer());
+            }
+        }
     }
 
 }

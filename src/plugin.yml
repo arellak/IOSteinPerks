@@ -1,8 +1,10 @@
 name: IOSteinPerks
-version: 0.4
+version: 0.41
 description: Perks for IOStein Server
 author: nimble0
 api-version: 1.16
+
+depend: [ProtocolLib]
 
 main: de.nimble.iostein.PerksPlugin
 

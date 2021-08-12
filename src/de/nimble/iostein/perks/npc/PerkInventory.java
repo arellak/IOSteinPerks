@@ -1,12 +1,13 @@
 package de.nimble.iostein.perks.npc;
 
+import com.mojang.datafixers.util.Pair;
 import de.nimble.iostein.PerksPlugin;
-import de.nimble.iostein.perks.PerkPlayerManager;
-import de.nimble.iostein.perks.PerkType;
-import de.nimble.iostein.perks.types.PerkManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
+import org.bukkit.inventory.ItemStack;
 
 public class PerkInventory {
 
@@ -23,56 +24,39 @@ public class PerkInventory {
         loadContentFirstPage();
     }
 
+    public PerkInventory(InventoryView view) {
+        this();
+        this.inventory = view.getTopInventory();
+        displayName = view.getTitle();
+        size = view.getTopInventory().getSize();
+    }
+
+    private void initBlankPage() {
+        for(int i = 0; i < size; i++) {
+            inventory.setItem(i, ItemCreator.create(Material.BLACK_STAINED_GLASS_PANE, ""));
+        }
+    }
+
     public void loadContentFirstPage() {
         // first step is to initialize each slot and afterwards overwrite the needed ones
-        for(int i = 0; i < size; i++) {
-            inventory.setItem(i, ItemCreator.create(Material.BLACK_STAINED_GLASS_PANE, "NOTHING'S HERE"));
+        initBlankPage();
+
+        for(Pair<Integer, ItemStack> itemPair : PerksPlugin.inventoryConfig.getFirstPageItems()) {
+            inventory.setItem(itemPair.getFirst(), itemPair.getSecond());
         }
-
-        inventory.setItem(2, PerkManager.getInstance().getPerkByType(PerkType.NO_FALL_DAMAGE).getPerkItem().create());
-        inventory.setItem(5, PerkManager.getInstance().getPerkByType(PerkType.NO_FIRE_DAMAGE).getPerkItem().create());
-        inventory.setItem(8, PerkManager.getInstance().getPerkByType(PerkType.NO_GRAVITY).getPerkItem().create());
-
-        inventory.setItem(11, ItemCreator.create(Material.LIGHT_GRAY_DYE, PerksPlugin.generalConfig.getPerkDeactivatedMessage()));
-        inventory.setItem(14, ItemCreator.create(Material.LIGHT_GRAY_DYE, PerksPlugin.generalConfig.getPerkDeactivatedMessage()));
-        inventory.setItem(17, ItemCreator.create(Material.LIGHT_GRAY_DYE, PerksPlugin.generalConfig.getPerkDeactivatedMessage()));
-
-        inventory.setItem(29, PerkManager.getInstance().getPerkByType(PerkType.UNDERWATER_BREATHING).getPerkItem().create());
-        inventory.setItem(32, PerkManager.getInstance().getPerkByType(PerkType.SPEED).getPerkItem().create());
-        inventory.setItem(35, PerkManager.getInstance().getPerkByType(PerkType.NO_HUNGER).getPerkItem().create());
-
-        inventory.setItem(38, ItemCreator.create(Material.LIGHT_GRAY_DYE, PerksPlugin.generalConfig.getPerkDeactivatedMessage()));
-        inventory.setItem(41, ItemCreator.create(Material.LIGHT_GRAY_DYE, PerksPlugin.generalConfig.getPerkDeactivatedMessage()));
-        inventory.setItem(44, ItemCreator.create(Material.LIGHT_GRAY_DYE, PerksPlugin.generalConfig.getPerkDeactivatedMessage()));
-
-        inventory.setItem(46, ItemCreator.create(Material.BOOK, PerksPlugin.generalConfig.getPerkInstructionBookMessage()));
-        inventory.setItem(54, ItemCreator.create(Material.PLAYER_HEAD, PerksPlugin.generalConfig.getPerkPageMessage().replace("%page%", "2")));
     }
 
     public void loadContentSecondPage() {
-        for(int i = 0; i < size; i++) {
-            inventory.setItem(i, ItemCreator.create(Material.BLACK_STAINED_GLASS_PANE, "NOTHING'S HERE"));
+        initBlankPage();
+
+        for(Pair<Integer, ItemStack> itemPair : PerksPlugin.inventoryConfig.getSecondPageItems()) {
+            inventory.setItem(itemPair.getFirst(), itemPair.getSecond());
         }
+    }
 
-
-        inventory.setItem(2, PerkManager.getInstance().getPerkByType(PerkType.PREFIX).getPerkItem().create());
-        inventory.setItem(5, PerkManager.getInstance().getPerkByType(PerkType.NO_FIRE_DAMAGE).getPerkItem().create());
-        inventory.setItem(8, PerkManager.getInstance().getPerkByType(PerkType.NO_GRAVITY).getPerkItem().create());
-
-        inventory.setItem(11, ItemCreator.create(Material.LIGHT_GRAY_DYE, PerksPlugin.generalConfig.getPerkDeactivatedMessage()));
-        inventory.setItem(14, ItemCreator.create(Material.BARRIER, PerksPlugin.generalConfig.getPerkNotUnlockedMessage()));
-        inventory.setItem(17, ItemCreator.create(Material.BARRIER, PerksPlugin.generalConfig.getPerkNotUnlockedMessage()));
-
-        inventory.setItem(29, PerkManager.getInstance().getPerkByType(PerkType.STRENGTH).getPerkItem().create());
-        inventory.setItem(32, PerkManager.getInstance().getPerkByType(PerkType.SPEED).getPerkItem().create());
-        inventory.setItem(35, PerkManager.getInstance().getPerkByType(PerkType.NO_HUNGER).getPerkItem().create());
-
-        inventory.setItem(38, ItemCreator.create(Material.LIGHT_GRAY_DYE, PerksPlugin.generalConfig.getPerkDeactivatedMessage()));
-        inventory.setItem(41, ItemCreator.create(Material.BARRIER, PerksPlugin.generalConfig.getPerkNotUnlockedMessage()));
-        inventory.setItem(44, ItemCreator.create(Material.BARRIER, PerksPlugin.generalConfig.getPerkNotUnlockedMessage()));
-
-        inventory.setItem(46, ItemCreator.create(Material.PLAYER_HEAD, PerksPlugin.generalConfig.getPerkPageMessage().replace("%page%", "1")));
-        inventory.setItem(54, ItemCreator.create(Material.PLAYER_HEAD, PerksPlugin.generalConfig.getPerkPageMessage().replace("%page%", "2")));
+    public void open(Player player) {
+        player.openInventory(this.inventory);
+        player.updateInventory();
     }
 
     public void onLeftPageClick() {
@@ -83,6 +67,20 @@ public class PerkInventory {
     public void onRightPageClick() {
         currentPage++;
         loadContentSecondPage();
+    }
+
+    public void handlePageClick(ItemStack item) {
+        String displayName = item.getItemMeta().getDisplayName().replaceAll("§", "&");
+        System.out.println("DisplayName: " + displayName.toLowerCase());
+
+        String firstPageName = PerksPlugin.inventoryConfig.getString("inventory.content.firstPage.nextPage.displayName");
+        String secondPageName = PerksPlugin.inventoryConfig.getString("inventory.content.secondPage.lastPage.displayName");
+
+        if(displayName.equalsIgnoreCase(firstPageName)) {
+            onLeftPageClick();
+        } else if(displayName.equalsIgnoreCase(secondPageName)) {
+            onRightPageClick();
+        }
     }
 
     public void setDisplayName(String displayName) {

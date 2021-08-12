@@ -14,7 +14,7 @@ public class PerkItem {
         this.material = material;
     }
 
-    public ItemStack create() {
+    public ItemStack getItem() {
         ItemStack itemStack = new ItemStack(material);
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(displayName);

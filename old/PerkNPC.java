@@ -11,15 +11,12 @@ import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.UUID;
 
 public class PerkNPC {
 
     private Location location;
     private String name;
-    private String uuid;
 
     private EntityPlayer npc;
     private MinecraftServer nmsServer;
@@ -32,10 +29,22 @@ public class PerkNPC {
 
         nmsServer = ((CraftServer) Bukkit.getServer()).getServer();
         nmsWorld = ((CraftWorld) location.getWorld()).getHandle();
-        gameProfile = new GameProfile(UUID.fromString("94ee3e42-8877-4f01-8617-4aad6aa7c277"), name);
+        gameProfile = new GameProfile(UUID.fromString(PerksPlugin.generalConfig.getString("npc.uuid")), name);
 
-        npc = new EntityPlayer(nmsServer, nmsWorld, gameProfile, new PlayerInteractManager(nmsWorld));
-        npc.setLocation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+        npc = new EntityPlayer(
+                nmsServer,
+                nmsWorld,
+                gameProfile,
+                new PlayerInteractManager(nmsWorld)
+        );
+
+        npc.setLocation(
+                location.getX(),
+                location.getY(),
+                location.getZ(),
+                location.getYaw(),
+                location.getPitch()
+        );
 
         npc.setCustomName(new ChatComponentText(name));
         npc.setCustomNameVisible(true);
@@ -56,7 +65,11 @@ public class PerkNPC {
     }
 
     public void onClick() {
+        Bukkit.broadcastMessage("On Click!");
+    }
 
+    public EntityPlayer getNpc() {
+        return this.npc;
     }
 
 }
