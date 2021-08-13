@@ -1,5 +1,6 @@
 package de.nimble.iostein.perks;
 
+import de.nimble.iostein.PerksPlugin;
 import de.nimble.iostein.perks.npc.PerkItem;
 import org.bukkit.entity.Player;
 
@@ -20,7 +21,16 @@ public abstract class Perk {
      * This method will be overwritten in each child class and in it will befined what the different Perks do
      */
     public abstract void onAction(Player player);
-    
+
+    protected void init(String name, PerkType type) {
+        setId(PerksPlugin.perkConfig.getId(name));
+        setName(PerksPlugin.perkConfig.getDisplayName(name));
+        setDescription(PerksPlugin.perkConfig.getDescription(name));
+        setStrength(PerksPlugin.perkConfig.getStrength(name));
+        setType(type);
+        setPerkItem(new PerkItem(getName(), PerksPlugin.perkConfig.getItem(name)));
+    }
+
     /*
      * Just the getter and setters for the attributes
      */

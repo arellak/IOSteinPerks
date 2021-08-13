@@ -21,7 +21,9 @@ public class GeneralPerkConfig extends BaseConfig {
     }
 
     public String getPerkLimitMessage() {
-        return getString("messages.perkLimitMessage").replaceAll("%prefix%", getPrefix());
+        return getString("messages.perkLimitMessage")
+                .replaceAll("%prefix%", getPrefix())
+                .replaceAll("%perkLimit%", String.valueOf(getPerkLimit()));
     }
 
     public String getPerkActiveMessage() {
@@ -41,7 +43,9 @@ public class GeneralPerkConfig extends BaseConfig {
     }
 
     public String getPerkDefinitionMessage() {
-        return getString("messages.perkDefinition").replaceAll("%prefix%", getPrefix());
+        return getString("messages.perkDefinition")
+                .replaceAll("%prefix%", getPrefix())
+                .replaceAll("%perkLimit%", String.valueOf(getPerkLimit()));
     }
 
     public String getPerkDeactivatedMessage() {

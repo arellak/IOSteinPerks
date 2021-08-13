@@ -19,7 +19,8 @@ public class PerkInventoryListener implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (!(event.getView().getTitle().equalsIgnoreCase("Perks"))) return;
-        if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) return;
+        if (event.getCurrentItem() == null
+                || event.getCurrentItem().getType() == Material.AIR) return;
 
         event.setCancelled(true);
 
@@ -33,48 +34,44 @@ public class PerkInventoryListener implements Listener {
 
         inventory.handlePageClick(currentItem, clicker.getUniqueId().toString());
 
-        Material currentItemType = currentItem.getType();
         Material activeButtonMaterial = PerksPlugin.inventoryConfig.getActiveButtonMaterial();
         Material inactiveButtonMaterial = PerksPlugin.inventoryConfig.getInactiveButtonMaterial();
         Material notUnlockedType = PerksPlugin.inventoryConfig.getNotUnlockedType();
+        Material instructionType = PerksPlugin.inventoryConfig.getInstructionType();
+        PerkPlayer perkPlayer = PerkPlayerManager.getInstance().getPerkPlayerByUUID(clicker.getUniqueId().toString());
 
-
-        if (currentItemType == inactiveButtonMaterial) {
-            handle(true, clickedDisplayName, clicker);
-
-            int perkCount = PerkPlayerManager.getInstance().getPerkPlayerByUUID(clicker.getUniqueId().toString()).getPerkCount();
-
-            if(PerkPlayerManager.getInstance().perkLimitReached(perkCount)) {
+        if (currentItem.getType() == inactiveButtonMaterial) {
+            if(perkPlayer != null && perkPlayer.getPerkCount() >= PerksPlugin.generalConfig.getPerkLimit()) {
+                clicker.sendMessage(PerksPlugin.generalConfig.getPerkLimitMessage());
                 return;
             }
+
+            handle(true, clickedDisplayName, clicker);
             currentItem.setType(activeButtonMaterial);
-        } else if (currentItemType == activeButtonMaterial) {
+        } else if (currentItem.getType() == activeButtonMaterial) {
             handle(false, clickedDisplayName, clicker);
             currentItem.setType(inactiveButtonMaterial);
-        } else if (currentItemType == notUnlockedType) {
+        } else if (currentItem.getType() == notUnlockedType) {
             clicker.sendMessage(PerksPlugin.generalConfig.getPerkNotUnlockedMessage());
+        } else if(currentItem.getType() == instructionType) {
+            clicker.sendMessage(PerksPlugin.generalConfig.getPerkDefinitionMessage());
         }
     }
 
     private void handle(boolean add, String displayName, Player clicker) {
         for (Perk perk : PerkManager.getInstance().getPerks()) {
             String perkDisplayName = perk.getPerkItem().getDisplayName().replaceAll("§", "&");
+
             if (displayName.equalsIgnoreCase(perkDisplayName)) {
+                String message = "";
                 if (add) {
-                    String message = PerkPlayerManager.getInstance().addPerk(clicker, perk);
-                    clicker.sendMessage(message);
+                    message = PerkPlayerManager.getInstance().addPerk(clicker, perk);
                 } else {
-                    String message = PerkPlayerManager.getInstance().removePerk(clicker, perk);
-                    clicker.sendMessage(message);
+                    message = PerkPlayerManager.getInstance().removePerk(clicker, perk);
                 }
+
+                clicker.sendMessage(message);
             }
         }
     }
-
-    @EventHandler
-    public void onInventoryClose(InventoryCloseEvent event) {
-        if (!(event.getView().getTitle().equalsIgnoreCase("Perks"))) return;
-
-    }
-
 }

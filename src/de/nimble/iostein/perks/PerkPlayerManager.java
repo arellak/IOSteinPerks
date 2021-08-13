@@ -14,10 +14,11 @@ public class PerkPlayerManager {
 
     /**
      * We only want one instance of this Manager
+     *
      * @return instance of the Manager
      */
     public static PerkPlayerManager getInstance() {
-        if(instance == null) {
+        if (instance == null) {
             instance = new PerkPlayerManager();
         }
         return instance;
@@ -37,47 +38,36 @@ public class PerkPlayerManager {
 
     /**
      * @param player The player that should get the perk
-     * @param perk The perk that should be added to the given Player
+     * @param perk   The perk that should be added to the given Player
      */
     public String addPerk(Player player, Perk perk) {
-        // TODO wenn viertes perk das ERSTE mal aktiviert wird, dann gehts noch durch, aber beim zweiten mal klicken nicht mehr
-        for(PerkPlayer perkPlayer : perkPlayers) {
-            if(perkPlayer.getPlayer().getDisplayName().equalsIgnoreCase(player.getDisplayName())) {
-                if(perkLimitReached(perkPlayer.getPerkCount())) {
-                    return PerksPlugin.generalConfig.getPerkLimitMessage();
-                }
+        PerkPlayer perkPlayer = new PerkPlayer(player);
 
-                PerksPlugin.perkStates.savePerkState(player.getUniqueId().toString(), perk.getType());
-                PerkPlayerManager.getInstance().action();
-                return perkPlayer.addPerk(perk);
+        // if player is in
+        for (PerkPlayer pp : perkPlayers) {
+            if (pp.getPlayer().getUniqueId().compareTo(player.getUniqueId()) == 0) {
+                perk.onAction(player);
+                return pp.addPerk(perk);
             }
         }
 
-        PerkPlayer perkPlayer = new PerkPlayer(player);
 
-        if(perkLimitReached(perkPlayer.getPerkCount())) {
-            return PerksPlugin.generalConfig.getPerkLimitMessage();
-        }
-
+        // add player to list if he isn't already in it
         String msg = perkPlayer.addPerk(perk);
         perkPlayers.add(perkPlayer);
-        PerksPlugin.perkStates.savePerkState(player.getUniqueId().toString(), perk.getType());
+        perk.onAction(player);
 
         return msg;
     }
 
-    public boolean perkLimitReached(int perkCount) {
-        return perkCount > PerksPlugin.generalConfig.getPerkLimit();
-    }
-
     /**
      * @param player The player that should get the perk
-     * @param perk The perk that should be removed from the given Player
+     * @param perk   The perk that should be removed from the given Player
      */
     public String removePerk(Player player, Perk perk) {
-        for(PerkPlayer perkPlayer : perkPlayers) {
-            if(perkPlayer.getPlayer().getDisplayName().equalsIgnoreCase(player.getDisplayName())) {
-                PerksPlugin.perkStates.removePerkState(player.getUniqueId().toString(), perk.getType());
+        for (PerkPlayer perkPlayer : perkPlayers) {
+            if (perkPlayer.getPlayer().getDisplayName().equalsIgnoreCase(player.getDisplayName())) {
+                // PerksPlugin.perkStates.removePerkState(player.getUniqueId().toString(), perk.getType());
                 return perkPlayer.removePerk(perk);
             }
         }
@@ -90,8 +80,8 @@ public class PerkPlayerManager {
     }
 
     public PerkPlayer getPerkPlayerByUUID(String uuid) {
-        for(PerkPlayer perkPlayer : perkPlayers) {
-            if(perkPlayer.getPlayer().getUniqueId().toString().equalsIgnoreCase(uuid)) {
+        for (PerkPlayer perkPlayer : perkPlayers) {
+            if (perkPlayer.getPlayer().getUniqueId().toString().equalsIgnoreCase(uuid)) {
                 return perkPlayer;
             }
         }

@@ -68,6 +68,9 @@ public class PerkPlayer {
                         player.setAllowFlight(false);
                         player.setFlying(false);
                         break;
+                    case NO_FIRE_DAMAGE:
+                        player.removePotionEffect(PotionEffectType.FIRE_RESISTANCE);
+                        break;
                     default:
                         break;
                 }

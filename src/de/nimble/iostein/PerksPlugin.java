@@ -60,6 +60,7 @@ public class PerksPlugin extends JavaPlugin {
         pluginManager.registerEvents(new PlayerJoinListener(), this);
         pluginManager.registerEvents(new PlayerQuitListener(), this);
         pluginManager.registerEvents(new PerkInventoryListener(), this);
+        pluginManager.registerEvents(new InventoryCloseListener(), this);
     }
 
 }

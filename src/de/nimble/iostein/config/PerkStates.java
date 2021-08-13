@@ -1,5 +1,6 @@
 package de.nimble.iostein.config;
 
+import de.nimble.iostein.perks.Perk;
 import de.nimble.iostein.perks.PerkType;
 
 import java.io.IOException;
@@ -12,12 +13,11 @@ public class PerkStates extends BaseConfig{
         super("perkStates");
     }
 
-    public void savePerkState(String playerUUID, PerkType... activePerks) {
-        List<String> activePerksList = getActivePerkStrings(playerUUID);
+    public void savePerkState(String playerUUID, List<Perk> perks) {
+        List<String> activePerksList = new ArrayList<>();
 
-        for(PerkType perkType : activePerks) {
-            if(activePerksList.contains(perkType.name())) continue;
-            activePerksList.add(perkType.name());
+        for(Perk p : perks) {
+            activePerksList.add(p.getType().name());
         }
 
         configuration.set(playerUUID + ".activePerks", activePerksList);
@@ -29,12 +29,10 @@ public class PerkStates extends BaseConfig{
         }
     }
 
-    public void removePerkState(String playerUUID, PerkType... activePerks) {
+    public void removePerkState(String playerUUID, PerkType toRemove) {
         List<String> activePerksList = getActivePerkStrings(playerUUID);
 
-        for(PerkType perkType : activePerks) {
-            activePerksList.remove(perkType.name());
-        }
+        activePerksList.removeIf(perkString -> perkString.equalsIgnoreCase(toRemove.name()));
 
         configuration.set(playerUUID + ".activePerks", activePerksList);
 

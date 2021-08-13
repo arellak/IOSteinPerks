@@ -1,7 +1,10 @@
 package de.nimble.iostein.perks.npc;
 
-import com.mojang.datafixers.util.Pair;
+import de.nimble.iostein.ItemPair;
 import de.nimble.iostein.PerksPlugin;
+import de.nimble.iostein.perks.Perk;
+import de.nimble.iostein.perks.PerkPlayer;
+import de.nimble.iostein.perks.PerkPlayerManager;
 import de.nimble.iostein.perks.PerkType;
 import de.nimble.iostein.perks.types.PerkManager;
 import org.bukkit.Bukkit;
@@ -47,42 +50,39 @@ public class PerkInventory {
         // first step is to initialize each slot and afterwards overwrite the needed ones
         initBlankPage();
 
-        List<PerkType> activePerks = PerksPlugin.perkStates.getActivePerks(playerUUID);
-        System.out.println("activePerks: " + activePerks.size());
-
-        Material activeButtonMaterial = PerksPlugin.inventoryConfig.getActiveButtonMaterial();
-        String activeDisplayName = PerksPlugin.inventoryConfig.getActiveButtonName();
-
-        for(Pair<Integer, ItemStack> itemPair : PerksPlugin.inventoryConfig.getFirstPageItems()) {
-            if(itemPair.getSecond().getType() == activeButtonMaterial) continue;
-            inventory.setItem(itemPair.getFirst(), itemPair.getSecond());
-
-            for(PerkType activePerk : activePerks) {
-                PerkItem perkItem = PerkManager.getInstance().getPerkByType(activePerk).getPerkItem();
-
-                if(perkItem.getDisplayName().equalsIgnoreCase(itemPair.getSecond().getItemMeta().getDisplayName())) {
-                    inventory.setItem(itemPair.getFirst() + 9, ItemCreator.create(activeButtonMaterial, activeDisplayName));
-                }
-            }
+        for(ItemPair itemPair : PerksPlugin.inventoryConfig.getItems("firstPage")) {
+            inventory.setItem(itemPair.first, itemPair.second);
         }
+
+        replaceButtons(playerUUID);
     }
 
     public void loadContentSecondPage(String playerUUID) {
         initBlankPage();
 
+        for(ItemPair itemPair : PerksPlugin.inventoryConfig.getItems("secondPage")) {
+            inventory.setItem(itemPair.first, itemPair.second);
+        }
+
+        replaceButtons(playerUUID);
+    }
+
+    public void replaceButtons(String playerUUID) {
         List<PerkType> activePerks = PerksPlugin.perkStates.getActivePerks(playerUUID);
 
         Material activeButtonMaterial = PerksPlugin.inventoryConfig.getActiveButtonMaterial();
         String activeDisplayName = PerksPlugin.inventoryConfig.getActiveButtonName();
 
-        for(Pair<Integer, ItemStack> itemPair : PerksPlugin.inventoryConfig.getSecondPageItems()) {
-            inventory.setItem(itemPair.getFirst(), itemPair.getSecond());
+        for(PerkType activePerk : activePerks) {
+            PerkItem perkItem = PerkManager.getInstance().getPerkByType(activePerk).getPerkItem();
+            String perkItemName = perkItem.getDisplayName().replaceAll("§", "&");
 
-            for(PerkType activePerk : activePerks) {
-                PerkItem perkItem = PerkManager.getInstance().getPerkByType(activePerk).getPerkItem();
+            for(int i = 0; i < inventory.getSize(); i++) {
+                ItemStack item = inventory.getItem(i);
+                String itemName = item.getItemMeta().getDisplayName().replaceAll("§", "&");
 
-                if(perkItem.getDisplayName().equalsIgnoreCase(itemPair.getSecond().getItemMeta().getDisplayName())) {
-                    inventory.setItem(itemPair.getFirst() + 9, ItemCreator.create(activeButtonMaterial, activeDisplayName));
+                if(perkItemName.equalsIgnoreCase(itemName)) {
+                    inventory.setItem(i+9, ItemCreator.create(activeButtonMaterial, activeDisplayName));
                 }
             }
         }
@@ -92,6 +92,14 @@ public class PerkInventory {
         loadContentFirstPage(player.getUniqueId().toString());
         player.openInventory(this.inventory);
         player.updateInventory();
+    }
+
+    public void close() {
+        for(PerkPlayer player : PerkPlayerManager.getInstance().getPerkPlayers()) {
+            List<Perk> perks = player.getPerks();
+
+            PerksPlugin.perkStates.savePerkState(player.getPlayer().getUniqueId().toString(), perks);
+        }
     }
 
     public void onLeftPageClick(String playerUUID) {
