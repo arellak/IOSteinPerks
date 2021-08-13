@@ -17,13 +17,14 @@ public class PlayerJoinListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
+        // Show Perk NPCs to every new player that joins
         for(NPC npc : PerksPlugin.npcManager.getRegisteredNPCs()) {
             npc.showTo(event.getPlayer());
         }
 
         // init playerperks
         PerkPlayer perkPlayer = new PerkPlayer(event.getPlayer());
-        List<PerkType> perks = PerksPlugin.perkStates.getActivePerks(perkPlayer.getPlayer().getUniqueId().toString());
+        List<PerkType> perks = PerksPlugin.perkStates.getActivePerks(perkPlayer.getPlayer().getUniqueId());
         for(PerkType perkType : perks) {
             Perk perk = PerkManager.getInstance().getPerkByType(perkType);
             PerkPlayerManager.getInstance().addPerk(event.getPlayer(), perk);

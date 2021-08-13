@@ -19,6 +19,11 @@ public class NMSHelper {
 
     }
 
+    /**
+     * sends a given packet to a player, using Reflections
+     * @param player
+     * @param packet
+     */
     public void sendPacket(Player player, Object packet) {
         if(player == null) {
             return;

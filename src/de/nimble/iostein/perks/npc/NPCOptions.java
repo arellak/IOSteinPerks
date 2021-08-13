@@ -2,14 +2,14 @@ package de.nimble.iostein.perks.npc;
 
 import org.bukkit.Location;
 
+/**
+Options for the NPC...basically just its essentials
+ */
 public class NPCOptions {
 
     private String name;
-    private String texture;
-    private String signature;
     private String uuid;
     private Location location;
-    private boolean hideNametag;
 
     public String getName() {
         return name;
@@ -17,22 +17,6 @@ public class NPCOptions {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getTexture() {
-        return texture;
-    }
-
-    public void setTexture(String texture) {
-        this.texture = texture;
-    }
-
-    public String getSignature() {
-        return signature;
-    }
-
-    public void setSignature(String signature) {
-        this.signature = signature;
     }
 
     public String getUuid() {
@@ -49,13 +33,5 @@ public class NPCOptions {
 
     public void setLocation(Location location) {
         this.location = location;
-    }
-
-    public boolean isHideNametag() {
-        return hideNametag;
-    }
-
-    public void setHideNametag(boolean hideNametag) {
-        this.hideNametag = hideNametag;
     }
 }

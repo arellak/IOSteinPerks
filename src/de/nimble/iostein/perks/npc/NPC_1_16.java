@@ -1,7 +1,6 @@
 package de.nimble.iostein.perks.npc;
 
 import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
 import de.nimble.iostein.PerksPlugin;
 import net.minecraft.server.v1_16_R3.*;
 import org.bukkit.Bukkit;
@@ -24,8 +23,6 @@ public class NPC_1_16 implements NPC{
     private UUID uuid;
     private String name;
     private String entityName;
-    private String texture;
-    private String signature;
     private Set<UUID> viewers = new HashSet<>();
 
     private EntityPlayer entityPlayer;
@@ -34,8 +31,6 @@ public class NPC_1_16 implements NPC{
         this.plugin = plugin;
 
         this.name = options.getName();
-        this.texture = options.getTexture();
-        this.signature = options.getSignature();
         this.uuid = UUID.fromString(options.getUuid());
 
         this.entityName = this.name;
@@ -43,6 +38,10 @@ public class NPC_1_16 implements NPC{
         addToWorld(options.getLocation());
     }
 
+    /**
+     * Basically method for initializing the NPC / EntityPlayer
+     * @param location where npc should be spawned
+     */
     private void addToWorld(Location location) {
         if(location.getWorld() == null) {
             throw new IllegalArgumentException("NPC location world cannot be null");
@@ -77,18 +76,6 @@ public class NPC_1_16 implements NPC{
         entityPlayer.canPickUpLoot = false;
     }
 
-    private GameProfile makeGameProfile() {
-        GameProfile gameProfile = new GameProfile(uuid, entityName);
-        gameProfile.getProperties().put(
-                "textures",
-                new Property("textures",
-                        texture,
-                        signature
-                )
-        );
-        return gameProfile;
-    }
-
     @Override
     public String getName() {
         return name;
@@ -104,7 +91,10 @@ public class NPC_1_16 implements NPC{
         return entityPlayer.getId();
     }
 
-
+    /**
+     * Sends packets that there is a new NPC and that the given Player can see the NPC now
+     * @param player to which the npc should be revealed
+     */
     @Override
     public void showTo(Player player) {
         viewers.add(player.getUniqueId());
@@ -133,6 +123,10 @@ public class NPC_1_16 implements NPC{
         }, 0, 2);
     }
 
+    /**
+     * sends packet that player can't see npc anymore
+     * @param player
+     */
     @Override
     public void hideFrom(Player player) {
         if (!viewers.contains(player.getUniqueId())) return;
@@ -153,6 +147,10 @@ public class NPC_1_16 implements NPC{
         PerksPlugin.npcLocationConfig.deleteLocation(getLocation());
     }
 
+    /**
+     * follows the player with the head
+     * @param player
+     */
     public void sendHeadRotationPacket(Player player) {
         Location original = getLocation();
         Location location = original.clone().setDirection(player.getLocation().subtract(original.clone()).toVector());
@@ -174,28 +172,7 @@ public class NPC_1_16 implements NPC{
         );
         sendPacket(player, lookPacket);
     }
-
-    public void fixSkinHelmetLayerForPlayer(Player player) {
-        Byte skinFixByte = 0x01 | 0x02 | 0x04 | 0x08 | 0x10 | 0x20 | 0x40;
-        sendMetadata(player, 16, skinFixByte);
-    }
-
-    private void sendMetadata(Player player, int index, byte o) {
-        DataWatcher dataWatcher = entityPlayer.getDataWatcher();
-        DataWatcherSerializer<Byte> registry = DataWatcherRegistry.a;
-        dataWatcher.set(
-                registry.a(index),
-                o
-        );
-
-        PacketPlayOutEntityMetadata metadataPacket = new PacketPlayOutEntityMetadata(
-                getId(),
-                dataWatcher,
-                false
-        );
-        sendPacket(player, metadataPacket);
-    }
-
+    
     @Override
     public Location getLocation() {
         return new Location(

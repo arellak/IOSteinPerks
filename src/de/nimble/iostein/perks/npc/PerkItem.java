@@ -14,6 +14,9 @@ public class PerkItem {
         this.material = material;
     }
 
+    /**
+     * @return PerkItem as ItemStack
+     */
     public ItemStack getItem() {
         ItemStack itemStack = new ItemStack(material);
         ItemMeta itemMeta = itemStack.getItemMeta();
@@ -23,6 +26,7 @@ public class PerkItem {
         return itemStack;
     }
 
+    // getter and setters
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
     }

@@ -30,5 +30,4 @@ public enum PerkType {
         }
         return PerkType.NONE;
     }
-
 }

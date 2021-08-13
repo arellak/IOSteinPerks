@@ -1,12 +1,10 @@
 package de.nimble.iostein.config;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.File;
-
+/**
+ * This class is mostly for reading all the messages from the config used ingame like error messages
+ */
 public class GeneralPerkConfig extends BaseConfig {
 
     /**
@@ -16,96 +14,87 @@ public class GeneralPerkConfig extends BaseConfig {
         super("config");
     }
 
+    /**
+     * @return the perk limit
+     */
     public int getPerkLimit() {
         return getInt("messages.perkLimit");
     }
 
+    /**
+     * @return message when you have the maximum perks
+     */
     public String getPerkLimitMessage() {
         return getString("messages.perkLimitMessage")
                 .replaceAll("%prefix%", getPrefix())
                 .replaceAll("%perkLimit%", String.valueOf(getPerkLimit()));
     }
 
+    /**
+     * @return message when you try to activate an already activated perk
+     */
     public String getPerkActiveMessage() {
         return getString("messages.perkActiveMessage");
     }
 
+    /**
+     * @return message when you activated a perk
+     */
     public String getPerkAddedMessage() {
         return getString("messages.perkAddedMessage");
     }
 
+    /**
+     * @return message when you deactivated a perk
+     */
     public String getPerkRemovedMessage() {
         return getString("messages.perkRemovedMessage");
     }
 
+    /**
+     * @return citybuild prefix so I don't have to write it 9239829382 times on my own
+     */
     public String getPrefix() {
         return getString("messages.prefix");
     }
 
+    /**
+     * @return Message what Perks are, replaces %prefix% with the given prefix and %perkLimit% with the given perkLimit
+     */
     public String getPerkDefinitionMessage() {
         return getString("messages.perkDefinition")
                 .replaceAll("%prefix%", getPrefix())
                 .replaceAll("%perkLimit%", String.valueOf(getPerkLimit()));
     }
 
-    public String getPerkDeactivatedMessage() {
-        return getString("messages.perkDeactivated");
-    }
-
+    /**
+     * @return message when a perk is not unlocked
+     */
     public String getPerkNotUnlockedMessage() {
         return getString("messages.perkNotUnlocked");
     }
 
-    public String getPerkPageMessage() {
-        return getString("messages.perkPage");
-    }
-
-    public String getPerkInstructionBookMessage() {
-        return getString("messages.perkInstructionBook");
-    }
-
-    public String getPerkComingSoonMessage() {
-        return getString("messages.perkComingSoon");
-    }
-
+    /**
+     * @return message when you have no perks unlocked yet
+     */
     public String getNoPerksUnlockedMessage() {
         return getString("messages.noPerksUnlocked").replaceAll("%prefix%", getPrefix());
     }
 
+    /**
+     * @return message when a perk is not active
+     */
     public String getPerkNotActiveMessage() {
         return getString("messages.perkNotActive");
     }
 
+    /**
+     * @return message when you spawn a perk npc
+     */
     public String getPerkVillagerSpawnedMessage() {
         return getString("messages.perkVillagerSpawned").replaceAll("%prefix%", getPrefix());
     }
 
-
-
-    // NPC stuff
-    public String getNPCName() {
-        return getString("npc.name");
-    }
-
-    public String getSkinLink() {
-        return getString("npc.skinLink");
-    }
-
-    public String getInventoryName() {
-        return getString("npc.inventory.name");
-    }
-
-    public int getInventorySize() {
-        return getInt("npc.inventory.size");
-    }
-
-    public Material getActivateButtonItem() {
-        return Material.getMaterial(getString("npc.inventory.items.activateButton"));
-    }
-
-    public Material getNotUnlockedItem() {
-        return Material.getMaterial(getString("npc.inventory.items.notUnlocked"));
-    }
 
     public int getInt(String name) {
         return configuration.getInt(name);

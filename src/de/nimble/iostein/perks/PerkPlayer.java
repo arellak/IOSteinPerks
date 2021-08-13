@@ -1,7 +1,6 @@
 package de.nimble.iostein.perks;
 
 import de.nimble.iostein.PerksPlugin;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 
@@ -28,8 +27,8 @@ public class PerkPlayer {
      * @return Success/Error message
      */
     public String addPerk(Perk perk) {
-        for(Perk pk : perks) {
-            if(pk.getType() == perk.getType()) {
+        for (Perk pk : perks) {
+            if (pk.getType() == perk.getType()) {
                 return PerksPlugin.generalConfig.getPerkActiveMessage();
             }
         }
@@ -40,21 +39,21 @@ public class PerkPlayer {
     }
 
     /**
-     *
+     * Remove perk from a player
      * @param perk The perk that should be removed from the player
      * @return String with a success message
      */
     public String removePerk(Perk perk) {
-        if(perkCount == 0) {
+        if (perkCount == 0) {
             return PerksPlugin.generalConfig.getPerkNotActiveMessage().replaceAll("%perk%", perk.getName());
         }
 
-        for(Perk pk : perks) {
-            if(pk.getType() == perk.getType()) {
+        for (Perk pk : perks) {
+            if (pk.getType() == perk.getType()) {
                 perks.remove(pk);
                 perkCount--;
 
-                switch(perk.getType()) {
+                switch (perk.getType()) {
                     case SPEED:
                         player.removePotionEffect(PotionEffectType.SPEED);
                         break;
@@ -82,7 +81,7 @@ public class PerkPlayer {
         return PerksPlugin.generalConfig.getPerkNotActiveMessage().replaceAll("%perk%", perk.getName());
     }
 
-
+    // getter and setters
     public List<Perk> getPerks() {
         return this.perks;
     }

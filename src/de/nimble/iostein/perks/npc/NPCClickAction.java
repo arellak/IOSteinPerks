@@ -2,6 +2,9 @@ package de.nimble.iostein.perks.npc;
 
 import com.comphenix.protocol.wrappers.EnumWrappers;
 
+/**
+ * Different types of click actions
+ */
 public enum NPCClickAction {
 
     INTERACT,

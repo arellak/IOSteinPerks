@@ -36,8 +36,10 @@ public class NPCManager {
                 new PacketAdapter(plugin, PacketType.Play.Client.USE_ENTITY) {
                     @Override
                     public void onPacketReceiving(PacketEvent event) {
+                        // The action...attack, interact, interact_at
                         EnumWrappers.EntityUseAction useAction = event.getPacket().getEntityUseActions().read(0);
                         int entityId = event.getPacket().getIntegers().read(0);
+
                         handleEntityClick(event.getPlayer(), entityId, NPCClickAction.fromAction(useAction));
                     }
                 }
@@ -45,6 +47,13 @@ public class NPCManager {
     }
 
     private void handleEntityClick(Player player, int entityId, NPCClickAction action) {
+        /*
+        searches for npc with the given id
+        for this npc it runs a scheduler that is 2 Ticks long so you don't spam the packet and something happens 5 times or so
+        for this procedure the cache is used
+
+        calls NPCInteractionEvent with the needed parameters
+         */
         registeredNPCs.stream()
                 .filter(npc -> npc.getId() == entityId)
                 .forEach(npc -> Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> {

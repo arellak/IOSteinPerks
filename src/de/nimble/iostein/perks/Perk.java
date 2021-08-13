@@ -22,6 +22,11 @@ public abstract class Perk {
      */
     public abstract void onAction(Player player);
 
+    /**
+     * Inits the values of the Perk
+     * @param name of the perk
+     * @param type of the perk
+     */
     protected void init(String name, PerkType type) {
         setId(PerksPlugin.perkConfig.getId(name));
         setName(PerksPlugin.perkConfig.getDisplayName(name));

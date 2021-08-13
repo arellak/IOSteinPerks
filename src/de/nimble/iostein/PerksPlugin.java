@@ -11,16 +11,23 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class PerksPlugin extends JavaPlugin {
 
+    /*
+    All the different configs that are need
+    I saved them in one space so I can init them on the server start and know excatly where they are
+    they are static because I need them all the time and those are no big objects so they can chill in the memory
+     */
     public static PerkConfig perkConfig;
     public static GeneralPerkConfig generalConfig;
     public static InventoryConfig inventoryConfig;
     public static NPCLocationConfig npcLocationConfig;
     public static PerkStates perkStates;
 
+    // Manager for the NPCs
     public static NPCManager npcManager;
 
     @Override
     public void onEnable() {
+        // just some initialization for the configs and the manager
         perkConfig = new PerkConfig();
         generalConfig = new GeneralPerkConfig();
         inventoryConfig = new InventoryConfig();
@@ -33,6 +40,7 @@ public class PerksPlugin extends JavaPlugin {
         loadCommands();
         registerEvents(getServer().getPluginManager());
 
+        // spawn all NPCs on startup
         npcManager.spawnAllNPCs();
     }
 

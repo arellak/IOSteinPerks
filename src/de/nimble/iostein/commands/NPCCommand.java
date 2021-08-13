@@ -2,7 +2,6 @@ package de.nimble.iostein.commands;
 
 import de.nimble.iostein.PerksPlugin;
 import de.nimble.iostein.perks.npc.NPC;
-import de.nimble.iostein.perks.npc.NPCOptions;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

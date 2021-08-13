@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class PerkPlayerManager {
 
@@ -28,6 +29,9 @@ public class PerkPlayerManager {
         this.perkPlayers = new ArrayList<>();
     }
 
+    /**
+     * calls all onAction methods of the active perks of a player
+     */
     public void action() {
         for (PerkPlayer perkPlayer : perkPlayers) {
             for (Perk perk : perkPlayer.getPerks()) {
@@ -63,11 +67,11 @@ public class PerkPlayerManager {
     /**
      * @param player The player that should get the perk
      * @param perk   The perk that should be removed from the given Player
+     * @return Success message
      */
     public String removePerk(Player player, Perk perk) {
         for (PerkPlayer perkPlayer : perkPlayers) {
             if (perkPlayer.getPlayer().getDisplayName().equalsIgnoreCase(player.getDisplayName())) {
-                // PerksPlugin.perkStates.removePerkState(player.getUniqueId().toString(), perk.getType());
                 return perkPlayer.removePerk(perk);
             }
         }
@@ -75,13 +79,20 @@ public class PerkPlayerManager {
         return PerksPlugin.generalConfig.getPerkNotActiveMessage().replaceAll("%perk%", perk.getName());
     }
 
+    /**
+     * @return All active PerkPlayers
+     */
     public List<PerkPlayer> getPerkPlayers() {
         return this.perkPlayers;
     }
 
-    public PerkPlayer getPerkPlayerByUUID(String uuid) {
+    /**
+     * @param uuid of the player you want to get
+     * @return <b>PerkPlayer</b> by the given UUID or <b>NULL</b>
+     */
+    public PerkPlayer getPerkPlayerByUUID(UUID uuid) {
         for (PerkPlayer perkPlayer : perkPlayers) {
-            if (perkPlayer.getPlayer().getUniqueId().toString().equalsIgnoreCase(uuid)) {
+            if (perkPlayer.getPlayer().getUniqueId().compareTo(uuid) == 0) {
                 return perkPlayer;
             }
         }

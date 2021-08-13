@@ -1,6 +1,8 @@
 package de.nimble.iostein.commands;
 
+import de.nimble.iostein.PerksPlugin;
 import de.nimble.iostein.perks.Perk;
+import de.nimble.iostein.perks.PerkPlayer;
 import de.nimble.iostein.perks.PerkPlayerManager;
 import de.nimble.iostein.perks.PerkType;
 import de.nimble.iostein.perks.types.*;
@@ -30,7 +32,11 @@ public class PerkCommand implements CommandExecutor {
         } else if(args[0].equalsIgnoreCase("remove")){
             String message = PerkPlayerManager.getInstance().removePerk(player, perk);
             player.sendMessage(message);
+        } else if(args[0].equalsIgnoreCase("unlock")) {
+            PerkType perkType = PerkType.getTypeByName(args[1]);
+            PerksPlugin.perkStates.unlockPerk(player.getUniqueId(), perkType);
         }
+
         return true;
     }
 

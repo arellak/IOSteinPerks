@@ -49,9 +49,11 @@ public class NPCLocationConfig extends BaseConfig {
     }
 
     public List<String> getLocationStrings() {
-        return configuration.getStringList("locations") == null ? new ArrayList<>() : configuration.getStringList("locations");
+        return configuration.getStringList("locations");
     }
 
+
+    // help methods to convert location to string and vice versa
     public String locToString(Location loc) {
         return loc.getX() + ";" + loc.getY() + ";" + loc.getZ() + ";" + loc.getWorld().getName();
     }

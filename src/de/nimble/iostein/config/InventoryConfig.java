@@ -1,6 +1,10 @@
 package de.nimble.iostein.config;
 
 import de.nimble.iostein.ItemPair;
+import de.nimble.iostein.PerksPlugin;
+import de.nimble.iostein.perks.Perk;
+import de.nimble.iostein.perks.PerkPlayer;
+import de.nimble.iostein.perks.PerkPlayerManager;
 import de.nimble.iostein.perks.PerkType;
 import de.nimble.iostein.perks.npc.ItemCreator;
 import de.nimble.iostein.perks.types.PerkManager;
@@ -10,6 +14,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class InventoryConfig extends BaseConfig {
 
@@ -23,8 +28,9 @@ public class InventoryConfig extends BaseConfig {
      * @param page Defines which page should be read
      * @return ItemPairs specific to the page
      */
-    public List<ItemPair> getItems(String page) {
+    public List<ItemPair> getItems(String page, UUID playerUUID) {
         List<ItemPair> items = new ArrayList<>();
+
         String fullKeyPath = "inventory.content." + page;
 
         for (String key : configuration.getConfigurationSection(fullKeyPath).getKeys(false)) {
@@ -37,7 +43,7 @@ public class InventoryConfig extends BaseConfig {
 
                 if (key.equalsIgnoreCase("button")) {
                     type = Material.getMaterial(getString(fullKeyPath + "." + key + ".inactive.type"));
-                    displayName = getString(fullKeyPath + "." + key + ".inactive.displayName");
+                    displayName = getString(fullKeyPath + "." + key + ".inactive.displayName").replaceAll("§", "&");
                 } else {
                     type = Material.getMaterial(getString(fullKeyPath + "." + key + ".type"));
                     displayName = getString(fullKeyPath + "." + key + ".displayName");

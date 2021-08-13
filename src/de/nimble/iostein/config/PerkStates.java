@@ -6,6 +6,7 @@ import de.nimble.iostein.perks.PerkType;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class PerkStates extends BaseConfig{
 
@@ -17,6 +18,7 @@ public class PerkStates extends BaseConfig{
         List<String> activePerksList = new ArrayList<>();
 
         for(Perk p : perks) {
+            if(activePerksList.contains(p.getType().name())) continue;
             activePerksList.add(p.getType().name());
         }
 
@@ -29,12 +31,16 @@ public class PerkStates extends BaseConfig{
         }
     }
 
-    public void removePerkState(String playerUUID, PerkType toRemove) {
-        List<String> activePerksList = getActivePerkStrings(playerUUID);
+    public void unlockPerk(UUID playerUUID, PerkType perkType) {
+        List<PerkType> unlockedTypes = getUnlockedPerks(playerUUID);
+        List<String> unlockedTypeStrings = new ArrayList<>();
+        unlockedTypes.forEach(unlockedType -> unlockedTypeStrings.add(unlockedType.name()));
 
-        activePerksList.removeIf(perkString -> perkString.equalsIgnoreCase(toRemove.name()));
+        if(!(unlockedTypeStrings.contains(perkType.name()))) {
+            unlockedTypeStrings.add(perkType.name());
+        }
 
-        configuration.set(playerUUID + ".activePerks", activePerksList);
+        configuration.set(playerUUID + ".unlockedPerks", unlockedTypeStrings);
 
         try {
             configuration.save(file);
@@ -43,13 +49,49 @@ public class PerkStates extends BaseConfig{
         }
     }
 
-    public List<String> getActivePerkStrings(String playerUUID) {
+    /**
+     *
+     * @param playerUUID
+     * @return list with unlocked perks
+     */
+    public List<PerkType> getUnlockedPerks(UUID playerUUID) {
+        List<PerkType> types = new ArrayList<>();
+
+        for(String t : configuration.getStringList(playerUUID + ".unlockedPerks")) {
+            PerkType perkType = PerkType.getTypeByName(t);
+            types.add(perkType);
+        }
+
+        return types;
+    }
+
+    /**
+     *
+     * @param playerUUID
+     * @return list with active perks but as strings
+     */
+    public List<String> getActivePerkStrings(UUID playerUUID) {
         return configuration.getStringList(playerUUID + ".activePerks");
     }
 
-    public List<PerkType> getActivePerks(String playerUUID) {
+    /**
+     *
+     * @param playerUUID
+     * @return list with active perks
+     */
+    public List<PerkType> getActivePerks(UUID playerUUID) {
+        return getPerks(playerUUID, "activePerks");
+    }
+
+    /**
+     * get all the active perks an user has
+     * @param playerUUID
+     * @param type
+     * @return List with active perks
+     */
+    private List<PerkType> getPerks(UUID playerUUID, String type) {
         List<PerkType> activePerks = new ArrayList<>();
-        List<String> activePerkStrings = configuration.getStringList(playerUUID + ".activePerks");
+        List<String> activePerkStrings = configuration.getStringList(playerUUID + "." + type);
 
         activePerkStrings.forEach(
                 perkString -> activePerks.add(PerkType.getTypeByName(perkString))

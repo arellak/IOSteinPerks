@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class PerkInventoryListener implements Listener {
@@ -24,6 +23,7 @@ public class PerkInventoryListener implements Listener {
 
         event.setCancelled(true);
 
+        // initalizes all the variables that are used so there are no stupid oneliners no one can read
         Player clicker = (Player) event.getWhoClicked();
         ItemStack currentItem = event.getCurrentItem();
         ItemStack perkItem = event.getInventory().getItem(event.getSlot() - 9);
@@ -32,32 +32,43 @@ public class PerkInventoryListener implements Listener {
 
         PerkInventory inventory = new PerkInventory(clicker.getOpenInventory());
 
-        inventory.handlePageClick(currentItem, clicker.getUniqueId().toString());
+        inventory.handlePageClick(currentItem, clicker.getUniqueId());
 
         Material activeButtonMaterial = PerksPlugin.inventoryConfig.getActiveButtonMaterial();
         Material inactiveButtonMaterial = PerksPlugin.inventoryConfig.getInactiveButtonMaterial();
         Material notUnlockedType = PerksPlugin.inventoryConfig.getNotUnlockedType();
         Material instructionType = PerksPlugin.inventoryConfig.getInstructionType();
-        PerkPlayer perkPlayer = PerkPlayerManager.getInstance().getPerkPlayerByUUID(clicker.getUniqueId().toString());
+        PerkPlayer perkPlayer = PerkPlayerManager.getInstance().getPerkPlayerByUUID(clicker.getUniqueId());
 
         if (currentItem.getType() == inactiveButtonMaterial) {
-            if(perkPlayer != null && perkPlayer.getPerkCount() >= PerksPlugin.generalConfig.getPerkLimit()) {
+            // send message when user has already the maximum amount of perks
+            if (perkPlayer != null && perkPlayer.getPerkCount() >= PerksPlugin.generalConfig.getPerkLimit()) {
                 clicker.sendMessage(PerksPlugin.generalConfig.getPerkLimitMessage());
                 return;
             }
 
+            // handle when user activates a perk
             handle(true, clickedDisplayName, clicker);
             currentItem.setType(activeButtonMaterial);
         } else if (currentItem.getType() == activeButtonMaterial) {
+            // handle when user deactivates a perk
             handle(false, clickedDisplayName, clicker);
             currentItem.setType(inactiveButtonMaterial);
         } else if (currentItem.getType() == notUnlockedType) {
+            // send message when user tries to activate an not yet unlocked / coming soon perk
             clicker.sendMessage(PerksPlugin.generalConfig.getPerkNotUnlockedMessage());
-        } else if(currentItem.getType() == instructionType) {
+        } else if (currentItem.getType() == instructionType) {
+            // send message
             clicker.sendMessage(PerksPlugin.generalConfig.getPerkDefinitionMessage());
         }
     }
 
+    /**
+     * Method that basically just activates or deactivates a perk - depending on the first argument
+     * @param add should the perk be activated or deactivated?
+     * @param displayName
+     * @param clicker
+     */
     private void handle(boolean add, String displayName, Player clicker) {
         for (Perk perk : PerkManager.getInstance().getPerks()) {
             String perkDisplayName = perk.getPerkItem().getDisplayName().replaceAll("§", "&");
